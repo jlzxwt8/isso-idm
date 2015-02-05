@@ -9,8 +9,13 @@ import com.isso.idm.base.dto.BasePageDTO;
 public class AccountPageDTO extends BasePageDTO<AccountDTO> implements Serializable {
 
 
-	public AccountPageDTO(long totalElements, int pageSize, int pageIndex, List<AccountDTO> systemList) {
-		super(totalElements, pageSize, pageIndex,systemList);
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8752968743888350277L;
+
+	public AccountPageDTO(long totalElements, int pageSize, int pageIndex, List<AccountDTO> accountList) {
+		super(totalElements, pageSize, pageIndex,accountList);
 	}
 
 }

@@ -3,79 +3,59 @@ package com.isso.idm.domain;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 
 /**
- * The persistent class for the TM_DMAP_ACCOUT database table.
+ * The persistent class for the account database table.
  * 
  */
 @Entity
-@Table(name="TM_IDM_ACCOUNT")
 public class Account implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TM_IDM_ACCOUT_ACCOUNTID_GENERATOR", sequenceName="SQ_ACCOUNT")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TM_IDM_ACCOUT_ACCOUNTID_GENERATOR")
-	@Column(name="ACCOUNT_ID")
+	@GeneratedValue
 	private long accountId;
 
-	@Column(name="ACCOUNT_CODE")
 	private String accountCode;
 
-	@Column(name="ACCOUNT_NAME")
 	private String accountName;
 
-	@Column(name="CREATE_BY")
 	private String createBy;
 
-	@Temporal(TemporalType.DATE)
-	@Column(name="CREATE_DATE")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date createDate;
 
 	private String email;
 
-	@Column(name="EXT_USER_ID")
-	private java.math.BigDecimal extUserId;
+	private long userId;
 
-	@Column(name="IS_LOCKED")
 	private Integer isLocked;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="LAST_LOGIN_TIME")
 	private Date lastLoginTime;
 
-	@Temporal(TemporalType.DATE)
-	@Column(name="LAST_PWD_CHANGE_DATE")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastPwdChangeDate;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="LOCK_TIME")
 	private Date lockTime;
 
-	@Column(name="LOGIN_FAILED_TIMES")
 	private Integer loginFailedTimes;
 
 	private String mobile;
 
-	@Column(name="MODIFY_BY")
 	private String modifyBy;
 
-	@Temporal(TemporalType.DATE)
-	@Column(name="MODIFY_DATE")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date modifyDate;
 
-	@Temporal(TemporalType.DATE)
-	@Column(name="PWD_EXPIRE_DATE")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date pwdExpireDate;
 
 	private Integer status;
@@ -131,12 +111,12 @@ public class Account implements Serializable {
 		this.email = email;
 	}
 
-	public java.math.BigDecimal getExtUserId() {
-		return this.extUserId;
+	public long getUserId() {
+		return this.userId;
 	}
 
-	public void setExtUserId(java.math.BigDecimal extUserId) {
-		this.extUserId = extUserId;
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 
 	public Integer getIsLocked() {

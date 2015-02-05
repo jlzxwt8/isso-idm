@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<property resource="idm.properties" />
+	
+	<appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg %n%xEx{${EXCEPTION_LINE_NUMBER}}
+			</Pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>TRACE</level>
+		</filter>
+	</appender>
+
+	<appender name="dailyRollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${LOG_PATH}/${LOG_FILENAME_CONSOLE}.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${LOG_FILENAME_CONSOLE}.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg %n%xEx{${EXCEPTION_LINE_NUMBER}}
+			</Pattern>
+		</encoder>
+	</appender>
+
+	<appender name="operationAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${LOG_PATH}/${LOG_FILENAME_OPERATION}.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${LOG_FILENAME_OPERATION}.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<Pattern>%d{HH:mm:ss.SSS} %-5level - %msg %n%xEx{${EXCEPTION_LINE_NUMBER}}
+			</Pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="adminOperationAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${LOG_PATH}/${LOG_FILENAME_ADMIN_OPERATION}.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${LOG_FILENAME_ADMIN_OPERATION}.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<Pattern>%d{HH:mm:ss.SSS} %-5level - %msg %n%xEx{${EXCEPTION_LINE_NUMBER}}
+			</Pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="loginLogoutAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${LOG_PATH}/${LOG_FILENAME_LOGIN_LOGOUT}.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${LOG_FILENAME_LOGIN_LOGOUT}.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg %n%xEx{${EXCEPTION_LINE_NUMBER}}
+			</Pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="systemAccessAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${LOG_PATH}/${LOG_FILENAME_SYSTEM_ACCESS}.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${LOG_FILENAME_SYSTEM_ACCESS}.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg %n%xEx{${EXCEPTION_LINE_NUMBER}}
+			</Pattern>
+		</encoder>
+	</appender>
+
+	<appender name="asyncAppender" class="ch.qos.logback.classic.AsyncAppender">
+		<queueSize>1000</queueSize>
+		<discardingThreshold>0</discardingThreshold>
+		<appender-ref ref="dailyRollingFileAppender" />
+	</appender>
+
+	<appender name="asyncOperationAppender" class="ch.qos.logback.classic.AsyncAppender">
+		<queueSize>1000</queueSize>
+		<discardingThreshold>0</discardingThreshold>
+		<appender-ref ref="operationAppender" />
+	</appender>
+	
+	<appender name="asyncAdminOperationAppender" class="ch.qos.logback.classic.AsyncAppender">
+		<queueSize>1000</queueSize>
+		<discardingThreshold>0</discardingThreshold>
+		<appender-ref ref="adminOperationAppender" />
+	</appender>
+	
+	<appender name="asyncLoginLogoutAppender" class="ch.qos.logback.classic.AsyncAppender">
+		<queueSize>1000</queueSize>
+		<discardingThreshold>0</discardingThreshold>
+		<appender-ref ref="loginLogoutAppender" />
+	</appender>
+
+	<appender name="asyncSystemAccessAppender" class="ch.qos.logback.classic.AsyncAppender">
+		<queueSize>1000</queueSize>
+		<discardingThreshold>0</discardingThreshold>
+		<appender-ref ref="systemAccessAppender" />
+	</appender>
+
+	<logger name="com.isso.idm" additivity="false">
+		<level value="${ERROR_LEVEL_APP}" />
+		<appender-ref ref="asyncAppender" />
+		<appender-ref ref="consoleAppender" />
+	</logger>
+
+	<logger name="OPERATION" additivity="false">
+		<level value="${ERROR_LEVEL_APP}" />
+		<appender-ref ref="asyncOperationAppender" />
+		<appender-ref ref="consoleAppender" />
+	</logger>
+	
+	<logger name="ADMIN_OPERATION" additivity="false">
+		<level value="${ERROR_LEVEL_APP}" />
+		<appender-ref ref="asyncAdminOperationAppender" />
+		<appender-ref ref="consoleAppender" />
+	</logger>
+
+	<root>
+		<level value="${ERROR_LEVEL_ROOT}" />
+		<appender-ref ref="consoleAppender" />
+	</root>
+</configuration>

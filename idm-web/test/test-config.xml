@@ -14,7 +14,7 @@
           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
 
-	<util:properties id="propertyConfigurer" location="classpath:isso-idm.properties" />
+	<util:properties id="propertyConfigurer" location="classpath:dms-idm.properties" />
 
 	<context:annotation-config />
 

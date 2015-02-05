@@ -15,15 +15,12 @@
 		<maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
 
 		<javax.servlet-api.version>3.0.1</javax.servlet-api.version>
-		<jsp-api.version>2.2</jsp-api.version>
-		<jstl.version>1.2</jstl.version>
-
 
 		<spring.version>4.0.6.RELEASE</spring.version>
 		<spring-data-jpa.version>1.6.4.RELEASE</spring-data-jpa.version>
 		<spring-bridge.version>2.3.0</spring-bridge.version>
-		<hibernate-jpa-2.1-api.version>1.0.0.Draft-16</hibernate-jpa-2.1-api.version>
-		<hibernate-entitymanager.version>4.3.6.Final</hibernate-entitymanager.version>
+		<hibernate-jpa-2.0-api.version>1.0.1.Final</hibernate-jpa-2.0-api.version>
+		<hibernate-entitymanager.version>4.1.9.Final</hibernate-entitymanager.version>
 		<javax.ws.rs-api.version>2.0</javax.ws.rs-api.version>
 		<jersey.version>2.11</jersey.version>
 		<jldap.version>2009-10-07</jldap.version>
@@ -66,60 +63,6 @@
 	</build>
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>solution.ccaf.common</groupId>
-				<artifactId>ccaf-common-base</artifactId>
-				<version>${ccaf-common-base.version}</version>
-				<type>bundle</type>
-			</dependency>
-			<dependency>
-				<groupId>solution.ccaf.common</groupId>
-				<artifactId>ccaf-common-mb-api</artifactId>
-				<version>${ccaf-common-mb-api.version}</version>
-				<type>bundle</type>
-			</dependency>
-			<dependency>
-				<groupId>solution.ccaf.common</groupId>
-				<artifactId>ccaf-common-mb-service</artifactId>
-				<version>${ccaf-common-mb-service.version}</version>
-				<type>bundle</type>
-			</dependency>
-			<dependency>
-				<groupId>solution.ccaf.common</groupId>
-				<artifactId>ccaf-common-cache-api</artifactId>
-				<version>${ccaf-common-cache-api.version}</version>
-				<type>bundle</type>
-			</dependency>
-			<dependency>
-				<groupId>solution.ccaf.common</groupId>
-				<artifactId>ccaf-common-cache-service</artifactId>
-				<version>${ccaf-common-cache-service.version}</version>
-				<type>bundle</type>
-			</dependency>
-			<dependency>
-				<groupId>solution.ccaf.common</groupId>
-				<artifactId>ccaf-common-mail-api</artifactId>
-				<version>${ccaf-common-mail-api.version}</version>
-				<type>bundle</type>
-			</dependency>
-			<dependency>
-				<groupId>solution.ccaf.common</groupId>
-				<artifactId>ccaf-common-mail-client</artifactId>
-				<version>${ccaf-common-mail-client.version}</version>
-				<type>bundle</type>
-			</dependency>
-			<dependency>
-				<groupId>solution.ccaf.common</groupId>
-				<artifactId>ccaf-common-cluster-service</artifactId>
-				<version>${ccaf-common-cluster-service.version}</version>
-				<type>bundle</type>
-			</dependency>
-			<dependency>
-				<groupId>solution.ccaf.common</groupId>
-				<artifactId>ccaf-common-timer-service</artifactId>
-				<version>${ccaf-common-timer-service.version}</version>
-				<type>bundle</type>
-			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-orm</artifactId>
@@ -193,15 +136,9 @@
 			</dependency>
 
 			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-webmvc</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-
-			<dependency>
 				<groupId>org.hibernate.javax.persistence</groupId>
-				<artifactId>hibernate-jpa-2.1-api</artifactId>
-				<version>${hibernate-jpa-2.1-api.version}</version>
+				<artifactId>hibernate-jpa-2.0-api</artifactId>
+				<version>${hibernate-jpa-2.0-api.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.hibernate</groupId>
@@ -363,24 +300,26 @@
 				<version>${javax.servlet-api.version}</version>
 				<scope>provided</scope>
 			</dependency>
-			<dependency>
-				<groupId>javax.servlet.jsp</groupId>
-				<artifactId>jsp-api</artifactId>
-				<version>${jsp-api.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>javax.servlet</groupId>
-				<artifactId>jstl</artifactId>
-				<version>${jstl.version}</version>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<modules>
 		<module>../idm-base</module>
 		<module>../idm-api</module>
 		<module>../idm-service</module>
-		<module>../idm-tim-api</module>
-		<module>../idm-tim-service</module>
 		<module>../idm-web</module>
 	</modules>
+
+	<distributionManagement>
+		<repository>
+			<id>nexus-releases</id>
+			<name>Nexus Releases Repository</name>
+			<url>http://121.127.249.159:8081/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>nexus-snapshots</id>
+			<name>Nexus Snapshot Repository</name>
+			<url>http://121.127.249.159:8081/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+
+	</distributionManagement>
 </project>

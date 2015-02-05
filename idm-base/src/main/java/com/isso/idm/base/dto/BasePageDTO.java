@@ -6,6 +6,10 @@ import java.util.List;
 
 public class BasePageDTO<T> implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2060653749051318071L;
 	private long total = 0;
 	private int totalPages = 0;
 	private int pageSize = 0;

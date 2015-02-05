@@ -15,10 +15,10 @@ public class AccountDTO extends BaseDTO implements Serializable {
 	private String accountName; // 帐号姓名
 	private String mobile;// 手机
 	private String email;// 电子邮件
-	private int accountStatus;// 帐号状态
-	private int lockStatus;// 帐号锁定状态
+	private Integer accountStatus;// 帐号状态
+	private Integer lockStatus;// 帐号锁定状态
 	private List<String> roles;// 用户属于的角色
-	private List<String> useSystems;// 用户可以使用的客户系统
+	private List<String> systems;// 用户可以使用的客户系统
 
 	
 	/**
@@ -97,7 +97,7 @@ public class AccountDTO extends BaseDTO implements Serializable {
 	/**
 	 * @return the accountStatus
 	 */
-	public int getAccountStatus() {
+	public Integer getAccountStatus() {
 		return accountStatus;
 	}
 
@@ -105,14 +105,14 @@ public class AccountDTO extends BaseDTO implements Serializable {
 	 * @param accountStatus
 	 *            the accountStatus to set
 	 */
-	public void setAccountStatus(int accountStatus) {
+	public void setAccountStatus(Integer accountStatus) {
 		this.accountStatus = accountStatus;
 	}
 
 	/**
 	 * @return the lockStatus
 	 */
-	public int getLockStatus() {
+	public Integer getLockStatus() {
 		return lockStatus;
 	}
 
@@ -120,7 +120,7 @@ public class AccountDTO extends BaseDTO implements Serializable {
 	 * @param lockStatus
 	 *            the lockStatus to set
 	 */
-	public void setLockStatus(int lockStatus) {
+	public void setLockStatus(Integer lockStatus) {
 		this.lockStatus = lockStatus;
 	}
 
@@ -141,16 +141,16 @@ public class AccountDTO extends BaseDTO implements Serializable {
 	/**
 	 * @return the useSystems
 	 */
-	public List<String> getUseSystems() {
-		return useSystems;
+	public List<String> getSystems() {
+		return systems;
 	}
 
 	/**
 	 * @param useSystems
 	 *            the useSystems to set
 	 */
-	public void setUseSystems(List<String> useSystems) {
-		this.useSystems = useSystems;
+	public void setSystems(List<String> systems) {
+		this.systems = systems;
 	}
 
 }

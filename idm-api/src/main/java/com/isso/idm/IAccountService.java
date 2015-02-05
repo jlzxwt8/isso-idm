@@ -29,7 +29,7 @@ public interface IAccountService {
 	 * @param accountDto
 	 * @throws IdmServiceException
 	 */
-	public void deleteAccount(Long accountId) throws IdmServiceException;
+	public void deleteAccount(AccountDTO accountDto) throws IdmServiceException;
 
 	/**
 	 * 查询用户账号

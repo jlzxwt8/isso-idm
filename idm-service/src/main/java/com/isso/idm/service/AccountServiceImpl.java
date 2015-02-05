@@ -38,11 +38,14 @@ public class AccountServiceImpl implements IAccountService {
 	 * @see com.isso.idm.IAccountService#createAccount(com.isso.idm.dto.AccountDTO)
 	 */
 	@Override
+	@Transactional
 	public long createAccount(AccountDTO accountDTO) throws IdmServiceException {
 		long accountId = 0;
 		Account account = null;
 		try {
 			account = toDomain(accountDTO);
+			account.setCreateDate(accountDTO.getCreateDate());
+			account.setCreateBy(accountDTO.getCreateBy());
 			account = accoutRepository.save(account);
 			logger.info("新增用户 " + account.getAccountName());
 			accountId = account.getAccountId();
@@ -58,15 +61,19 @@ public class AccountServiceImpl implements IAccountService {
 	 * @see com.isso.idm.IAccountService#updateAccount(com.isso.idm.dto.AccountDTO)
 	 */
 	@Override
+	@Transactional
 	public void updateAccount(AccountDTO accountDTO) throws IdmServiceException {
 		Account account = null;
 		try {
 			account = accoutRepository.findOne(accountDTO.getAccountId());
-			account.setAccountName(account.getAccountName());
+			account.setAccountName(accountDTO.getAccountName());
 			account.setEmail(accountDTO.getEmail());
 			account.setMobile(accountDTO.getMobile());
 			account.setIsLocked(accountDTO.getLockStatus());
 			account.setStatus(accountDTO.getAccountStatus());
+			account.setModifyBy(accountDTO.getModifyBy());
+			account.setModifyDate(accountDTO.getModifyDate());
+			account = accoutRepository.save(account);
 			logger.info("更新用户 " + account.getAccountName());
 		} catch (IllegalArgumentException e) {
 			throw new IdmServiceException(IdmServiceErrorConstant.DATA_NOT_FOUND, "用户不存在");
@@ -81,12 +88,15 @@ public class AccountServiceImpl implements IAccountService {
 	 * @see com.isso.idm.IAccountService#deleteAccount(com.isso.idm.dto.AccountDTO)
 	 */
 	@Override
-	public void deleteAccount(Long accountId) throws IdmServiceException {
+	@Transactional
+	public void deleteAccount(AccountDTO accountDTO) throws IdmServiceException {
 		Account account = null;
 		try {
-			account = accoutRepository.findOne(accountId);
-			account.setAccountName(account.getAccountName());
+			account = accoutRepository.findOne(accountDTO.getAccountId());
 			account.setStatus(IdmServiceConstant.ACCOUNT_INACTIVE);
+			account.setModifyBy(accountDTO.getModifyBy());
+			account.setModifyDate(accountDTO.getModifyDate());
+			account = accoutRepository.save(account);
 			logger.info("禁用用户 " + account.getAccountName());
 		} catch (IllegalArgumentException e) {
 			throw new IdmServiceException(IdmServiceErrorConstant.DATA_NOT_FOUND, "用户不存在");
@@ -153,10 +163,10 @@ public class AccountServiceImpl implements IAccountService {
 			if (!CollectionUtils.isEmpty(accountList)) {
 				accountDTO = toDto(accountList.get(0));
 			} else {
-				throw new IdmServiceException();
+				throw new IdmServiceException(IdmServiceErrorConstant.DATA_NOT_FOUND, "用户不存在");
 			}
 		} catch (IdmServiceException e) {
-			throw new IdmServiceException(IdmServiceErrorConstant.DATA_NOT_FOUND, "用户不存在");
+			throw e;
 		} catch (Exception e) {
 			throw new IdmServiceException(IdmServiceErrorConstant.DATA_PROCESS, "用户查询失败", e);
 		} finally {
@@ -178,10 +188,10 @@ public class AccountServiceImpl implements IAccountService {
 			if (account != null) {
 				accountDTO = toDto(account);
 			} else {
-				throw new IdmServiceException();
+				throw new IdmServiceException(IdmServiceErrorConstant.DATA_NOT_FOUND, "用户不存在");
 			}
 		} catch (IdmServiceException e) {
-			throw new IdmServiceException(IdmServiceErrorConstant.DATA_NOT_FOUND, "用户不存在");
+			throw e;
 		} catch (Exception e) {
 			throw new IdmServiceException(IdmServiceErrorConstant.DATA_PROCESS, "用户查询失败", e);
 		} finally {
@@ -194,7 +204,7 @@ public class AccountServiceImpl implements IAccountService {
 	private Account toDomain(AccountDTO accountDTO) {
 		Account account = new Account();
 		account.setAccountCode(accountDTO.getAccountCode());
-		account.setAccountName(account.getAccountName());
+		account.setAccountName(accountDTO.getAccountName());
 		account.setEmail(accountDTO.getEmail());
 		account.setMobile(accountDTO.getMobile());
 		account.setIsLocked(accountDTO.getLockStatus());
@@ -211,6 +221,10 @@ public class AccountServiceImpl implements IAccountService {
 		accountDTO.setMobile(account.getMobile());
 		accountDTO.setLockStatus(account.getIsLocked());
 		accountDTO.setAccountStatus(account.getStatus());
+		accountDTO.setCreateBy(account.getCreateBy());
+		accountDTO.setCreateDate(account.getCreateDate());
+		accountDTO.setModifyBy(account.getModifyBy());
+		accountDTO.setModifyDate(account.getModifyDate());
 		return accountDTO;
 	}
 }
