@@ -47,30 +47,6 @@
 			</Pattern>
 		</encoder>
 	</appender>
-	
-	<appender name="loginLogoutAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<File>${LOG_PATH}/${LOG_FILENAME_LOGIN_LOGOUT}.log</File>
-		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<FileNamePattern>${LOG_FILENAME_LOGIN_LOGOUT}.%d{yyyy-MM-dd}.log</FileNamePattern>
-			<maxHistory>30</maxHistory>
-		</rollingPolicy>
-		<encoder>
-			<Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg %n%xEx{${EXCEPTION_LINE_NUMBER}}
-			</Pattern>
-		</encoder>
-	</appender>
-	
-	<appender name="systemAccessAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<File>${LOG_PATH}/${LOG_FILENAME_SYSTEM_ACCESS}.log</File>
-		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<FileNamePattern>${LOG_FILENAME_SYSTEM_ACCESS}.%d{yyyy-MM-dd}.log</FileNamePattern>
-			<maxHistory>30</maxHistory>
-		</rollingPolicy>
-		<encoder>
-			<Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg %n%xEx{${EXCEPTION_LINE_NUMBER}}
-			</Pattern>
-		</encoder>
-	</appender>
 
 	<appender name="asyncAppender" class="ch.qos.logback.classic.AsyncAppender">
 		<queueSize>1000</queueSize>
@@ -88,18 +64,6 @@
 		<queueSize>1000</queueSize>
 		<discardingThreshold>0</discardingThreshold>
 		<appender-ref ref="adminOperationAppender" />
-	</appender>
-	
-	<appender name="asyncLoginLogoutAppender" class="ch.qos.logback.classic.AsyncAppender">
-		<queueSize>1000</queueSize>
-		<discardingThreshold>0</discardingThreshold>
-		<appender-ref ref="loginLogoutAppender" />
-	</appender>
-
-	<appender name="asyncSystemAccessAppender" class="ch.qos.logback.classic.AsyncAppender">
-		<queueSize>1000</queueSize>
-		<discardingThreshold>0</discardingThreshold>
-		<appender-ref ref="systemAccessAppender" />
 	</appender>
 
 	<logger name="com.isso.idm" additivity="false">

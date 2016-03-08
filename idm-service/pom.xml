@@ -87,15 +87,6 @@
 			<artifactId>hibernate-entitymanager</artifactId>
 		</dependency>
 
-		
-		<dependency>
-			<groupId>com.novell.ldap</groupId>
-			<artifactId>jldap</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.novell.ldap</groupId>
-			<artifactId>utilities</artifactId>
-		</dependency>
 
 		<dependency>
 			<groupId>mysql</groupId>

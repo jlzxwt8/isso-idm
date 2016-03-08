@@ -13,13 +13,11 @@ public class AccountDTO extends BaseDTO implements Serializable {
 	private Long accountId; // 帐号编号
 	private String accountCode; // 帐号编码
 	private String accountName; // 帐号姓名
-	private String mobile;// 手机
-	private String email;// 电子邮件
 	private Integer accountStatus;// 帐号状态
 	private Integer lockStatus;// 帐号锁定状态
-	private List<String> roles;// 用户属于的角色
-	private List<String> systems;// 用户可以使用的客户系统
-
+	private List<String> positions;// 用户的岗位
+	private List<String> systems;// 用户可以使用的系统
+	private Long userId; //用户编号
 	
 	/**
 	 * @return the accountId
@@ -65,36 +63,6 @@ public class AccountDTO extends BaseDTO implements Serializable {
 	}
 
 	/**
-	 * @return the mobile
-	 */
-	public String getMobile() {
-		return mobile;
-	}
-
-	/**
-	 * @param mobile
-	 *            the mobile to set
-	 */
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
-
-	/**
-	 * @return the email
-	 */
-	public String getEmail() {
-		return email;
-	}
-
-	/**
-	 * @param email
-	 *            the email to set
-	 */
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	/**
 	 * @return the accountStatus
 	 */
 	public Integer getAccountStatus() {
@@ -127,15 +95,15 @@ public class AccountDTO extends BaseDTO implements Serializable {
 	/**
 	 * @return the roles
 	 */
-	public List<String> getRoles() {
-		return roles;
+	public List<String> getPositions() {
+		return positions;
 	}
 
 	/**
 	 * @param roles the roles to set
 	 */
-	public void setRoles(List<String> roles) {
-		this.roles = roles;
+	public void setPositions(List<String> positions) {
+		this.positions = positions;
 	}
 
 	/**
@@ -153,4 +121,19 @@ public class AccountDTO extends BaseDTO implements Serializable {
 		this.systems = systems;
 	}
 
+	/**
+	 * @return the userId
+	 */
+	public Long getUserId() {
+		return userId;
+	}
+
+	/**
+	 * @param userId the userId to set
+	 */
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	
 }

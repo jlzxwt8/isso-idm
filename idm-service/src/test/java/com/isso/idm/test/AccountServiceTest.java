@@ -31,13 +31,11 @@ public class AccountServiceTest {
 	private AccountDTO accountDto = null; 
 	@Before
 	public void setup() {
-		accoutRepository.deleteAll();
 		accountDto = new AccountDTO();
-		accountDto.setAccountCode("wangtong");
-		accountDto.setAccountName("王桐");
+		accountDto.setAccountCode("630113");
+		accountDto.setAccountName("rong.dai");
+		accountDto.setUserId((long)2);
 		accountDto.setAccountStatus(IdmServiceConstant.ACCOUNT_INACTIVE);
-		accountDto.setEmail("jlzxwt8@126.com");
-		accountDto.setMobile("15000555632");
 		accountDto.setLockStatus(IdmServiceConstant.ACCOUNT_UNLOCK);
 		accountDto.setCreateDate(new Date());
 	}
@@ -57,6 +55,5 @@ public class AccountServiceTest {
 	}
 	@After
 	public void destroy() {
-		accoutRepository.deleteAll();
 	}
 }

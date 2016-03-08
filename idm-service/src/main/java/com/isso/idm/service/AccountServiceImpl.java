@@ -67,8 +67,6 @@ public class AccountServiceImpl implements IAccountService {
 		try {
 			account = accoutRepository.findOne(accountDTO.getAccountId());
 			account.setAccountName(accountDTO.getAccountName());
-			account.setEmail(accountDTO.getEmail());
-			account.setMobile(accountDTO.getMobile());
 			account.setIsLocked(accountDTO.getLockStatus());
 			account.setStatus(accountDTO.getAccountStatus());
 			account.setModifyBy(accountDTO.getModifyBy());
@@ -205,10 +203,9 @@ public class AccountServiceImpl implements IAccountService {
 		Account account = new Account();
 		account.setAccountCode(accountDTO.getAccountCode());
 		account.setAccountName(accountDTO.getAccountName());
-		account.setEmail(accountDTO.getEmail());
-		account.setMobile(accountDTO.getMobile());
 		account.setIsLocked(accountDTO.getLockStatus());
 		account.setStatus(accountDTO.getAccountStatus());
+		account.setUserId(accountDTO.getUserId());
 		return account;
 	}
 
@@ -217,14 +214,13 @@ public class AccountServiceImpl implements IAccountService {
 		accountDTO.setAccountId(account.getAccountId());
 		accountDTO.setAccountCode(account.getAccountCode());
 		accountDTO.setAccountName(account.getAccountName());
-		accountDTO.setEmail(account.getEmail());
-		accountDTO.setMobile(account.getMobile());
 		accountDTO.setLockStatus(account.getIsLocked());
 		accountDTO.setAccountStatus(account.getStatus());
 		accountDTO.setCreateBy(account.getCreateBy());
 		accountDTO.setCreateDate(account.getCreateDate());
 		accountDTO.setModifyBy(account.getModifyBy());
 		accountDTO.setModifyDate(account.getModifyDate());
+		accountDTO.setUserId(account.getUserId());
 		return accountDTO;
 	}
 }
