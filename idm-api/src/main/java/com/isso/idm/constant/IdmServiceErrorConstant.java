@@ -7,4 +7,6 @@ public class IdmServiceErrorConstant extends BaseErrorConstant {
 	
 	public static final String ERROR_PASSWORD_POLICY = "ERROR_PASSWORD_POLICY";
 	
+	public static final String ERROR_ACCOIUNT_VERIFY = "ERROR_ACCOIUNT_VERIFY";
+	
 }

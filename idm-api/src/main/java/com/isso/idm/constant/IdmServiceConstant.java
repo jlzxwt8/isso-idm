@@ -13,6 +13,8 @@ public class IdmServiceConstant {
 	public static final int ACCOUNT_ACTIVE = 1;
 	public static final int ACCOUNT_MANUAL_LOCKED = 2;
 	
+	public static final int SYSTEM_INACTIVE = 0;
+	public static final int SYSTEM_ACTIVE = 1;
 	
 	public static final String MB_TOPIC_ACCOUNT = "MB_TOPIC_ACCOUNT";
 	public static final String MB_KEY_LOGIN_LOCK = "MB_KEY_LOGIN_LOCK";

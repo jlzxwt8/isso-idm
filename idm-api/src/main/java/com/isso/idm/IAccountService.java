@@ -7,6 +7,78 @@ import com.isso.idm.dto.AccountPageDTO;
 
 public interface IAccountService {
 	/**
+	 * 验证用户名和密码是否正确
+	 * @Author : Wang Tong
+	 * @param accountCode
+	 * @param password
+	 * @throws IdmServiceException
+	 */
+	public void verifyPassword(String accountCode, String password) throws IdmServiceException;
+
+	/**
+	 * 用户是否拥有应用系统权限
+	 * @Author : Wang Tong
+	 * @param accountCode
+	 * @param systemCode
+	 * @return
+	 * @throws IdmServiceException
+	 */
+	public boolean checkSystem(String accountCode, String systemCode) throws IdmServiceException;
+	
+	/**
+	 * 更新用户密码
+	 * @Author : Wang Tong
+	 * @param accountCode
+	 * @param oldPassword
+	 * @param newPassword
+	 * @throws IdmServiceException
+	 */
+	public void updatePassword(String accountCode, String oldPassword, String newPassword)
+			throws IdmServiceException;
+
+	/**
+	 * 要求发送重置密码邮件
+	 * @Author : Wang Tong
+	 * @param accountCode
+	 * @param accountMail
+	 * @throws IdmServiceException
+	 */
+	public void retrievePassword(String accountCode, String accountMail) throws IdmServiceException;
+	
+	/**
+	 * 重置用户密码
+	 * @Author : Wang Tong
+	 * @param retrieveKey
+	 * @param newPassword
+	 * @throws IdmServiceException
+	 */
+	public void resetPassword(String retrieveKey, String newPassword) throws IdmServiceException;
+
+	/**
+	 * 系统管理员手动锁定账号
+	 * @Author : Wang Tong
+	 * @param accountCode
+	 * @throws IdmServiceException
+	 */
+	public void manualLockAccount(String accountCode)  throws IdmServiceException;
+
+	/**
+	 * 激活账号
+	 * @Author : Wang Tong
+	 * @param accountCode
+	 * @throws IdmServiceException
+	 */
+	public void activeAccount(String accountCode)  throws IdmServiceException;
+	
+	/**
+	 * 禁用账号
+	 * @Author : Wang Tong
+	 * @param accountCode
+	 * @throws IdmServiceException
+	 */
+	public void inactiveAccount(String accountCode)  throws IdmServiceException;
+	
+	/**
 	 * 创建用户账号
 	 * @Author : Wang Tong
 	 * @param accountDto
