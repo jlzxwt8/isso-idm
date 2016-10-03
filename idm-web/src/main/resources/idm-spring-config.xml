@@ -18,7 +18,7 @@
 	<context:annotation-config />
 
 	<context:component-scan base-package="com.isso.idm.service" />
-
+	<context:component-scan base-package="com.isso.common.service" />
 	<!-- 数据源 -->
 	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
 		<property name="jndiName" value="java:comp/env/jdbc/SSODB"></property>

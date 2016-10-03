@@ -11,7 +11,7 @@ public class BaseRestful {
 	protected String getLoginUser(HttpServletRequest request) {
 		String userId = null;
 		try {
-			userId = (String) request.getSession().getAttribute(
+			userId = (String) request.getAttribute(
 					BaseConstant.LOGIN_USER);
 		} catch (Exception e) {
 			e.printStackTrace();

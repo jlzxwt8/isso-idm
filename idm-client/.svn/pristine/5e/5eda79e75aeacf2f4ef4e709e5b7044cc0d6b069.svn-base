@@ -1,0 +1,363 @@
+/****************************************************************************************
+ * @File name   :      SSOClientUtil.java
+ *
+ * @Author      :      LEIKZHU
+ *
+ * @Date        :      Aug 28, 2014
+ *
+ * @Copyright Notice: 
+ * Copyright (c) 2014 SGM, Inc. All  Rights Reserved.
+ * This software is published under the terms of the SGM Software
+ * License version 1.0, a copy of which has been included with this
+ * distribution in the LICENSE.txt file.
+ * 
+ * 
+ * --------------------------------------------------------------------------------------
+ * Date								Who					Version				Comments
+ * Aug 28, 2014 10:24:33 AM			LEIKZHU				1.0				Initial Version
+ ****************************************************************************************/
+package com.sgm.dms.am.client.util;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Date;
+import java.util.Properties;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.oltu.oauth2.client.OAuthClient;
+import org.apache.oltu.oauth2.client.URLConnectionClient;
+import org.apache.oltu.oauth2.client.request.OAuthBearerClientRequest;
+import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
+import org.apache.oltu.oauth2.client.response.OAuthAccessTokenResponse;
+import org.apache.oltu.oauth2.client.response.OAuthResourceResponse;
+import org.apache.oltu.oauth2.common.OAuth;
+import org.apache.oltu.oauth2.common.error.OAuthError;
+import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
+import org.apache.oltu.oauth2.common.message.types.GrantType;
+
+import com.sgm.dms.am.client.OAuthClientException;
+import com.sgm.dms.am.client.constant.OAuthClientConstant;
+import com.sgm.dms.am.client.constant.OAuthClientErrorConstant;
+import com.sgm.dms.am.client.dto.SSOAccessToken;
+import com.sgm.dms.am.client.dto.SSOCertificateDTO;
+
+public class SSOClientUtil {
+
+	/**
+	 * 
+	 * @Author : LEIKZHU
+	 * @Date : Aug 31, 2014
+	 * @param request
+	 * @return
+	 */
+	public static SSOCertificateDTO getCertificate(HttpServletRequest request) {
+		SSOCertificateDTO authentication = null;
+		try {
+			authentication = (SSOCertificateDTO) request.getSession(true).getAttribute(
+					OAuthClientConstant.SGM_SSO_AUTHENTICATION);
+		} catch (Exception e) {
+		}
+		return authentication;
+	}
+
+	/**
+	 * 
+	 * @Author : LEIKZHU
+	 * @Date : Aug 31, 2014
+	 * @param request
+	 * @return
+	 */
+	public static String getOAuthCode(HttpServletRequest request) {
+		String oauthCode = null;
+		Cookie oauthCodeCookie = null;
+		Cookie[] cookies = null;
+		try {
+			cookies = request.getCookies();
+			if (cookies != null) {
+				for (Cookie cookie : cookies) {
+					if (cookie.getName().equals(OAuthClientConstant.SGM_OAUTH_CODE)) {
+						oauthCodeCookie = cookie;
+						break;
+					}
+				}
+			}
+			if (oauthCodeCookie != null) {
+				oauthCode = oauthCodeCookie.getValue();
+			} else {
+				oauthCode = request.getParameter(OAuthClientConstant.SGM_OAUTH_RESPONSE_TYPE);
+			}
+		} finally {
+			oauthCodeCookie = null;
+			cookies = null;
+		}
+		return oauthCode;
+	}
+
+	/**
+	 * 
+	 * @Author : LEIKZHU
+	 * @Date : Aug 31, 2014
+	 * @param oauthCode
+	 * @param accessTokenUrl
+	 * @param clientId
+	 * @param clientSecret
+	 * @param redirectUrl
+	 * @return
+	 * @throws OAuthClientException
+	 */
+	public static SSOAccessToken getAccessToken(String oauthCode, String accessTokenUrl, String clientId,
+			String clientSecret, String redirectUrl) throws OAuthClientException {
+		SSOAccessToken accessToken = null;
+		try {
+			OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
+			System.out.println("SSOClientUtil:"+oauthCode+"|"+accessTokenUrl+"|"+clientId+"|"+
+							clientSecret+"|"+redirectUrl+"|"+new Date());
+			OAuthClientRequest accessTokenRequest = OAuthClientRequest.tokenLocation(accessTokenUrl)
+					.setGrantType(GrantType.AUTHORIZATION_CODE).setClientId(clientId).setClientSecret(clientSecret)
+					.setCode(oauthCode).setRedirectURI(redirectUrl).buildQueryMessage();
+
+			OAuthAccessTokenResponse oAuthResponse = oAuthClient.accessToken(accessTokenRequest, OAuth.HttpMethod.POST);
+
+			accessToken = new SSOAccessToken();
+			accessToken.setAccessToken(oAuthResponse.getAccessToken());
+			accessToken.setExpiresIn(oAuthResponse.getExpiresIn());
+		} catch (OAuthProblemException e) {
+			throw new OAuthClientException(getOAuthClientErrorKey(e.getError()), e.getDescription());
+		} catch (Exception e) {
+			throw new OAuthClientException(OAuthClientErrorConstant.SSO_SYSTEM, e.getMessage());
+		}
+		return accessToken;
+	}
+
+	/**
+	 * 
+	 * @Author : LEIKZHU
+	 * @Date : Aug 31, 2014
+	 * @param accessToken
+	 * @param userInfoUrl
+	 * @return
+	 * @throws OAuthClientException
+	 */
+	public static String extractUserId(String accessToken, String userInfoUrl) throws OAuthClientException {
+		String userId = null;
+		try {
+			OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
+
+			OAuthClientRequest userInfoRequest = new OAuthBearerClientRequest(userInfoUrl).setAccessToken(accessToken)
+					.buildQueryMessage();
+
+			OAuthResourceResponse resourceResponse = oAuthClient.resource(userInfoRequest, OAuth.HttpMethod.GET,
+					OAuthResourceResponse.class);
+			userId = resourceResponse.getBody();
+		} catch (OAuthProblemException e) {
+			throw new OAuthClientException(getOAuthClientErrorKey(e.getError()), e.getDescription());
+		} catch (Exception e) {
+			throw new OAuthClientException(OAuthClientErrorConstant.SSO_SYSTEM, e.getMessage());
+		}
+		return userId;
+	}
+
+	/**
+	 * 
+	 * @Author : LEIKZHU
+	 * @Date : Aug 31, 2014
+	 * @param request
+	 * @return
+	 */
+	public static String getFullURL(HttpServletRequest request) {
+		StringBuffer url = new StringBuffer();
+		StringBuffer tempUrl = new StringBuffer();
+		String queryString = null;
+		StringBuffer attributeString = null;
+		String[] attributes = null;
+		int index1, index2;
+		Properties properties = new Properties();
+		InputStream in = SSOClientUtil.class.getResourceAsStream("/am-client.properties");
+		if (in == null) {
+			in = SSOClientUtil.class.getResourceAsStream("/default-am-client.properties");
+		}
+		try {
+			properties.load(in);
+			in.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Request URL in am-client filter: " + request.getRequestURL());
+		 url = request.getRequestURL();
+		url.append(request.getHeader("refer"));
+		String nginxWasDeploy = properties.getProperty("com.sgm.dms.am.nginx.wasDeploy");
+		if (nginxWasDeploy != null && nginxWasDeploy.equals("true")) {
+			index1 = url.indexOf(":");
+			index1 = url.indexOf(":", index1 + 1);
+			if (index1 != -1) {
+
+				index2 = url.indexOf("/", index1);
+				tempUrl.append(url.substring(0, index1)).append(url.substring(index2));
+				url = tempUrl;
+			}
+		}
+		queryString = request.getQueryString();
+		attributeString = new StringBuffer();
+		attributes = null;
+		if (queryString != null) {
+			attributes = queryString.split("&");
+			for (String attribute : attributes) {
+				if (attribute.indexOf("code=") == -1) {
+					if (attributeString.toString().length() > 0) {
+						attributeString.append("&");
+					}
+					attributeString.append(attribute);
+				}
+			}
+			if (attributeString.toString().length() > 0) {
+				url.append("?" + attributeString.toString());
+			}
+		}
+		return url.toString();
+	}
+
+	/**
+	 * 
+	 * @Author : Duyong update
+	 * @Date : Mar 30, 2015
+	 * @param request
+	 * @return
+	 */
+	public static String getFullURL(HttpServletRequest request, String referUrl) {
+		StringBuffer url = null;
+		StringBuffer tempUrl = new StringBuffer();
+		String queryString = null;
+		StringBuffer attributeString = null;
+		String[] attributes = null;
+		int index1, index2;
+		Properties properties = new Properties();
+		InputStream in = SSOClientUtil.class.getResourceAsStream("/am-client.properties");
+		if (in == null) {
+			in = SSOClientUtil.class.getResourceAsStream("/default-am-client.properties");
+		}
+		try {
+			properties.load(in);
+			in.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Request URL in am-client filter: " + request.getRequestURL());
+		// update by Duyong at 2015-3-31 8:23 PM
+		if (null == referUrl || referUrl.equals("")) {
+			url = request.getRequestURL();
+		} else {
+			url = new StringBuffer(referUrl);
+			url.append(request.getRequestURI());
+		}
+		// end update
+		String nginxWasDeploy = properties.getProperty("com.sgm.dms.am.nginx.wasDeploy");
+		if (nginxWasDeploy != null && nginxWasDeploy.equals("true")) {
+			index1 = url.indexOf(":");
+			index1 = url.indexOf(":", index1 + 1);
+			if (index1 != -1) {
+
+				index2 = url.indexOf("/", index1);
+				tempUrl.append(url.substring(0, index1)).append(url.substring(index2));
+				url = tempUrl;
+			}
+		}
+		queryString = request.getQueryString();
+		attributeString = new StringBuffer();
+		attributes = null;
+		if (queryString != null) {
+			attributes = queryString.split("&");
+			for (String attribute : attributes) {
+				if (attribute.indexOf("code=") == -1) {
+					if (attributeString.toString().length() > 0) {
+						attributeString.append("&");
+					}
+					attributeString.append(attribute);
+				}
+			}
+			if (attributeString.toString().length() > 0) {
+				url.append("?" + attributeString.toString());
+			}
+		}
+		return url.toString();
+	}
+
+	/**
+	 * 
+	 * @Author : LEIKZHU
+	 * @Date : Aug 31, 2014
+	 * @param request
+	 * @return
+	 */
+	public static String getFileType(HttpServletRequest request) {
+		StringBuffer url = request.getRequestURL();
+		String fileType = "";
+		int i = url.lastIndexOf(".");
+		if (i != -1) {
+			fileType = url.substring(i + 1).toUpperCase();
+		}
+		return fileType;
+	}
+
+	/**
+	 * 
+	 * @Author : LEIKZHU
+	 * @Date : Aug 31, 2014
+	 * @param serverErrorKet
+	 * @return
+	 */
+	private static String getOAuthClientErrorKey(String serverErrorKet) {
+		String errorKey = OAuthClientErrorConstant.SSO_SYSTEM;
+		if (serverErrorKet.equals(OAuthError.TokenResponse.INVALID_CLIENT)) {
+			errorKey = OAuthClientErrorConstant.SSO_INVALID_CLIENT;
+		}
+		if (serverErrorKet.equals(OAuthError.TokenResponse.INVALID_GRANT)) {
+			errorKey = OAuthClientErrorConstant.SSO_INVALID_GRANT;
+		}
+		if (serverErrorKet.equals(OAuthError.TokenResponse.INVALID_REQUEST)) {
+			errorKey = OAuthClientErrorConstant.SSO_INVALID_REQUEST;
+		}
+		return errorKey;
+	}
+
+	/**
+	 * 
+	 * @Author : LEIKZHU
+	 * @Date : Aug 31, 2014
+	 * @param request
+	 *            Http请求
+	 * @param response
+	 *            Http回复
+	 * @param authCode
+	 *            OAuth 2.0 用户验证Code
+	 * @param expiresIn
+	 *            超时时间长度
+	 * @return
+	 */
+	public static void resetOAuthCookie(HttpServletRequest request, HttpServletResponse response, String authCode,
+			int expiresIn) {
+		Properties properties = new Properties();
+		InputStream in = SSOClientUtil.class.getResourceAsStream("/am-client.properties");
+		if (in == null) {
+			in = SSOClientUtil.class.getResourceAsStream("/default-am-client.properties");
+		}
+		try {
+			properties.load(in);
+			in.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		Cookie oauthCodeCookie = new Cookie(OAuthClientConstant.SGM_OAUTH_CODE, authCode);
+		oauthCodeCookie.setMaxAge(expiresIn);
+		oauthCodeCookie.setDomain(properties.getProperty("com.sgm.dms.am.authorize.domainname"));
+		oauthCodeCookie.setPath(properties.getProperty("com.sgm.dms.am.authorize.path"));
+		response.addCookie(oauthCodeCookie);
+	}
+
+}

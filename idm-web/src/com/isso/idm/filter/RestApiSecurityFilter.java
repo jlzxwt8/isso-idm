@@ -1,21 +1,4 @@
-/****************************************************************************************
- * @File name   :      RestApiSecurityFilter.java
- *
- * @Author      :      TONWANG
- *
- * @Date        :      2014年12月4日
- *
- * @Copyright Notice: 
- * Copyright (c) 2014 SGM, Inc. All  Rights Reserved.
- * This software is published under the terms of the SGM Software
- * License version 1.0, a copy of which has been included with this
- * distribution in the LICENSE.txt file.
- * 
- * 
- * --------------------------------------------------------------------------------------
- * Date								Who					Version				Comments
- * 2014年12月4日 下午3:14:32			TONWANG				1.0				Initial Version
- ****************************************************************************************/
+
 package com.isso.idm.filter;
 
 import java.io.IOException;
@@ -27,6 +10,10 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+
+import com.isso.idm.client.dto.SSOCertificateDTO;
+import com.isso.idm.constant.IdmServiceConstant;
+import com.isso.idm.constant.OAuthConstant;
 
 public class RestApiSecurityFilter implements Filter {
 
@@ -51,7 +38,14 @@ public class RestApiSecurityFilter implements Filter {
 	public void doFilter(ServletRequest servletRequest,
 			ServletResponse servletResponse, FilterChain filterChain)
 			throws IOException, ServletException {
-		
+		HttpServletRequest request = (HttpServletRequest) servletRequest;
+		String userId = null;
+		SSOCertificateDTO authentication = null;
+		authentication = (SSOCertificateDTO) request.getSession().getAttribute(OAuthConstant.ISSO_SSO_AUTHENTICATION);
+		if (authentication != null) {
+			userId = authentication.getUserId();
+		}
+		request.setAttribute(IdmServiceConstant.CURRENT_LOGIN_UESRID, userId);
 		filterChain.doFilter(servletRequest, servletResponse);
 	}
 

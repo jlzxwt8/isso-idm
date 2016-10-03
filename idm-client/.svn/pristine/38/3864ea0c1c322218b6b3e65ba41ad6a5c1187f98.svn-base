@@ -1,0 +1,236 @@
+/****************************************************************************************
+ * @File name   :      OAuthClientFilter.java
+ *
+ * @Author      :      LEIKZHU
+ *
+ * @Date        :      Aug 28, 2014
+ *
+ * @Copyright Notice: 
+ * Copyright (c) 2014 SGM, Inc. All  Rights Reserved.
+ * This software is published under the terms of the SGM Software
+ * License version 1.0, a copy of which has been included with this
+ * distribution in the LICENSE.txt file.
+ * 
+ * 
+ * --------------------------------------------------------------------------------------
+ * Date								Who					Version				Comments
+ * Aug 28, 2014 10:24:33 AM			LEIKZHU				1.0				Initial Version
+ ****************************************************************************************/
+package com.sgm.dms.am.client.filter;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.sgm.dms.am.client.OAuthClientException;
+import com.sgm.dms.am.client.constant.OAuthClientConstant;
+import com.sgm.dms.am.client.constant.OAuthClientErrorConstant;
+import com.sgm.dms.am.client.dto.SSOAccessToken;
+import com.sgm.dms.am.client.dto.SSOCertificateDTO;
+import com.sgm.dms.am.client.util.SSOClientUtil;
+
+/**
+ * OAuth 2.0 SSO 服务客户端Filter
+ * 
+ * @author LEIKZHU
+ *
+ */
+public class OAuthClientFilter implements Filter {
+
+	protected FilterConfig filterConfig = null;
+
+	private String clientId;
+	private String clientSecret;
+
+	private String authorizeUrl;
+	private String accessTokenUrl;
+	private String userInfoUrl;
+	private String rejectUrl;
+	private String referUrl;
+
+	private List<String> excludePathList = Collections.synchronizedList(new ArrayList<String>());
+	private List<String> excludeFileList = Collections.synchronizedList(new ArrayList<String>());
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
+	 */
+	@Override
+	public void init(FilterConfig filterConfig) throws ServletException {
+		this.filterConfig = filterConfig;
+		// 初始化SSO Client标识
+		clientId = filterConfig.getInitParameter("clientId");
+		clientSecret = filterConfig.getInitParameter("clientSecret");
+
+		// 初始化SSO 服务地址
+		String verifyUrl = filterConfig.getInitParameter("verifyUrl");
+		String tokenUrl = filterConfig.getInitParameter("tokenUrl");
+		authorizeUrl = verifyUrl + "/authorize";
+		rejectUrl = verifyUrl + "/reject";
+		accessTokenUrl = tokenUrl + "/accessToken";
+		userInfoUrl = tokenUrl + "/userInfo";
+		//update by Duyong at 2015-3-31 8:23 PM
+		referUrl=filterConfig.getInitParameter("referUrl");
+		// end  update
+
+		// 初始化排除安全验证目录清单
+		String excludePath = filterConfig.getInitParameter("excludePath");
+		if (excludePath != null && !excludePath.trim().equals("")) {
+			String[] paths = excludePath.split(",");
+			for (String path : paths) {
+				excludePathList.add(path);
+			}
+		}
+
+		// 初始化排除安全验证文件类型清单
+		String excludeFile = filterConfig.getInitParameter("excludeFile");
+		if (excludeFile != null && !excludeFile.trim().equals("")) {
+			String[] files = excludeFile.split(",");
+			for (String file : files) {
+				excludeFileList.add(file.toUpperCase());
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
+	 * javax.servlet.ServletResponse, javax.servlet.FilterChain)
+	 */
+	@Override
+	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
+			FilterChain filterChain) throws IOException, ServletException {
+		HttpServletRequest request = (HttpServletRequest) servletRequest;
+		HttpServletResponse response = (HttpServletResponse) servletResponse;
+		
+//		String requestUrl = SSOClientUtil.getFullURL(request);
+		//Update by Duyong at 2015/3/30
+		String requestUrl = SSOClientUtil.getFullURL(request,referUrl);
+		System.out.println("requestUrl:"+requestUrl);
+		String fileType = null;
+		String oauthCode = null;
+		SSOAccessToken accessToken = null;
+
+		SSOCertificateDTO certificate = null;
+
+		try {
+			certificate = SSOClientUtil.getCertificate(request);
+
+			// 排除不需要安全检查的URL路径
+			for (String excludePath : excludePathList) {
+				String temprequestUrl=requestUrl;
+				if (requestUrl.indexOf("?")>=0)
+				 temprequestUrl=requestUrl.substring(0,requestUrl.indexOf("?"));
+				if (temprequestUrl.indexOf(excludePath) != -1) {
+					filterChain.doFilter(servletRequest, servletResponse);
+					return;
+				}
+			}
+			// 排除不需要安全检查的文件类型
+			fileType = SSOClientUtil.getFileType(request);
+			if (excludeFileList.contains(fileType)) {
+				filterChain.doFilter(servletRequest, servletResponse);
+				return;
+			}
+
+			oauthCode = SSOClientUtil.getOAuthCode(request);
+
+			// 检查当前回话是否有证书
+			if (certificate == null) {
+				// 如果没有OAuth code，则重定向到服务端授权
+				if (oauthCode == null) {
+					request.getSession()
+							.removeAttribute(OAuthClientConstant.SGM_SSO_AUTHENTICATION);
+					response.sendRedirect(authorizeUrl + "?client_id=" + clientId
+							+ "&response_type=code&redirect_uri=" + requestUrl);
+					return;
+				} else {
+					//problem
+//					System.out.println("OAuthClientFilter:"+oauthCode+"|"+accessTokenUrl+"|"+clientId+"|"+
+//							clientSecret+"|"+requestUrl+"|"+new Date());
+					accessToken = SSOClientUtil.getAccessToken(oauthCode, accessTokenUrl, clientId,
+							clientSecret, requestUrl);
+					
+					certificate = new SSOCertificateDTO(SSOClientUtil.extractUserId(
+							accessToken.getAccessToken(), userInfoUrl), false, oauthCode,
+							accessToken.getExpiresIn());
+//					System.out.println("problem:|"+request.getSession()+"|"+certificate);
+					request.getSession().setAttribute(OAuthClientConstant.SGM_SSO_AUTHENTICATION,
+							certificate);
+				}
+			} else {
+				if (oauthCode != null) {
+					// 检查正式内Auth Code与回话Auth Code是否一致，如果不一致则说明单点登录用户以切换
+					if (!certificate.getLastAuthCode().equals(oauthCode)) {
+						accessToken = SSOClientUtil.getAccessToken(oauthCode, accessTokenUrl,
+								clientId, clientSecret, requestUrl);
+
+						request.getSession().removeAttribute(
+								OAuthClientConstant.SGM_SSO_AUTHENTICATION);
+						certificate = new SSOCertificateDTO(SSOClientUtil.extractUserId(
+								accessToken.getAccessToken(), userInfoUrl), true, oauthCode,
+								accessToken.getExpiresIn());
+						request.getSession().setAttribute(
+								OAuthClientConstant.SGM_SSO_AUTHENTICATION, certificate);
+					} else {
+						certificate.setChange(false);
+					}
+				} else {
+					throw new OAuthClientException(OAuthClientErrorConstant.SSO_INVALID_REQUEST, "");
+				}
+			}
+
+			// 重新设置SSO回话超时时间
+			SSOClientUtil.resetOAuthCookie(request, response, certificate.getLastAuthCode(),
+					Long.valueOf(certificate.getExpiresIn()).intValue());
+		} catch (OAuthClientException e) {
+			String errorKey = e.getErrorKey();
+			e.printStackTrace();
+			if (errorKey.equals(OAuthClientErrorConstant.SSO_INVALID_GRANT)) {
+				response.sendRedirect(rejectUrl + "?client_id=" + clientId
+						+ "&response_type=code&redirect_uri=" + requestUrl);
+				return;
+			}
+			if (errorKey.equals(OAuthClientErrorConstant.SSO_INVALID_CLIENT)) {
+				request.getSession().removeAttribute(OAuthClientConstant.SGM_SSO_AUTHENTICATION);
+				response.sendRedirect(authorizeUrl + "?client_id=" + clientId
+						+ "&response_type=code&redirect_uri=" + requestUrl);
+				return;
+
+			} else {
+				request.getSession().removeAttribute(OAuthClientConstant.SGM_SSO_AUTHENTICATION);
+				response.sendRedirect(authorizeUrl + "?client_id=" + clientId
+						+ "&response_type=code&redirect_uri=" + requestUrl);
+				return;
+			}
+		} finally {
+			requestUrl = null;
+			fileType = null;
+			oauthCode = null;
+			accessToken = null;
+		}
+
+		filterChain.doFilter(servletRequest, servletResponse);
+	}
+
+
+	@Override
+	public void destroy() {
+		excludePathList.clear();
+		excludeFileList.clear();
+	}
+
+}

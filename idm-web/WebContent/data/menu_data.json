@@ -1,0 +1,9 @@
+[ 
+  { 
+    "id" : "00",
+    "name" : "应用系统管理",
+    "url" : "systemManager.html",
+    "permissions" : ["amAdmin"],
+    "submenus" : []
+  }
+]

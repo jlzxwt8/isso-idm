@@ -1,0 +1,48 @@
+/****************************************************************************************
+ * @File name   :      SSOAuthentication.java
+ *
+ * @Author      :      LEIKZHU
+ *
+ * @Date        :      Aug 29, 2014
+ *
+ * @Copyright Notice: 
+ * Copyright (c) 2014 SGM, Inc. All  Rights Reserved.
+ * This software is published under the terms of the SGM Software
+ * License version 1.0, a copy of which has been included with this
+ * distribution in the LICENSE.txt file.
+ * 
+ * 
+ * --------------------------------------------------------------------------------------
+ * Date								Who					Version				Comments
+ * Aug 29, 2014 10:43:22 AM			LEIKZHU				1.0				Initial Version
+ ****************************************************************************************/
+package com.sgm.dms.am.client;
+
+
+
+/**
+ * 单点登录用户安全证书
+ * 
+ * @author LEIKZHU
+ *
+ */
+public interface SSOCertificate {
+
+	/**
+	 * 取得登录用户编码
+	 * 
+	 * @Author : LEIKZHU
+	 * @Date : Aug 31, 2014
+	 * @return 登录用户编码
+	 */
+	public String getUserId();
+
+	/**
+	 * 当前登录用户与上一次相比，是否改变
+	 * 
+	 * @Author : LEIKZHU
+	 * @Date : Aug 31, 2014
+	 * @return "true"发生改变,"false"未改变
+	 */
+	public boolean isChange();
+}

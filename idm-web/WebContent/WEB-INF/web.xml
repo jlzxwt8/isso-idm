@@ -9,6 +9,41 @@
 		<param-value>idm.root</param-value>
 	</context-param>
 	<filter>
+		<filter-name>OAuthClientFilter</filter-name>
+		<filter-class>com.isso.idm.client.filter.OAuthClientFilter</filter-class>
+		<init-param>
+			<param-name>clientId</param-name>
+			<param-value>1002</param-value>
+		</init-param>
+		<init-param>
+			<param-name>clientSecret</param-name>
+			<param-value>utd</param-value>
+		</init-param>
+		<init-param>
+			<param-name>verifyUrl</param-name>
+			<param-value>http://portal.isso.com:8080/idm/oauth</param-value>
+		</init-param>
+		<init-param>
+			<param-name>tokenUrl</param-name>
+			<param-value>http://portal.isso.com:8080/idm/oauth</param-value>
+		</init-param>
+		<init-param>
+			<param-name>excludePath</param-name>
+			<param-value>/oauth,/account_service,/system_service</param-value>
+		</init-param>
+		<init-param>
+			<param-name>excludeFile</param-name>
+			<param-value>css,js,jpg</param-value>
+		</init-param>
+
+	</filter>
+	<filter-mapping>
+		<filter-name>OAuthClientFilter</filter-name>
+		<url-pattern>/system/*</url-pattern>
+		<url-pattern>/account_service/*</url-pattern>
+		<url-pattern>/system_service/*</url-pattern>
+	</filter-mapping>
+	<filter>
 		<filter-name>CorsFilter</filter-name>
 		<filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
 		<init-param>
@@ -27,8 +62,21 @@
 	<filter-mapping>
 		<filter-name>RestApiSecurityFilter</filter-name>
 		<url-pattern>/account_service/*</url-pattern>
+		<url-pattern>/system_service/*</url-pattern>
 	</filter-mapping>
-
+	<servlet>
+		<servlet-name>spring</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:spring-mvc.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>spring</servlet-name>
+		<url-pattern>/oauth/*</url-pattern>
+	</servlet-mapping>
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>

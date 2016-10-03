@@ -31,8 +31,6 @@ public class Account implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createDate;
 
-	private long user_userId;
-
 	private Integer isLocked;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -55,6 +53,14 @@ public class Account implements Serializable {
 	private Date pwdExpireDate;
 
 	private Integer status;
+	
+	private String firstName;
+	
+	private String lastName;
+	
+	private String mobile;
+	
+	private String email;
 
 	public Account() {
 	}
@@ -97,14 +103,6 @@ public class Account implements Serializable {
 
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
-	}
-
-	public long getUserId() {
-		return this.user_userId;
-	}
-
-	public void setUserId(long user_userId) {
-		this.user_userId = user_userId;
 	}
 
 	public Integer getIsLocked() {
@@ -179,4 +177,35 @@ public class Account implements Serializable {
 		this.status = status;
 	}
 
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 }

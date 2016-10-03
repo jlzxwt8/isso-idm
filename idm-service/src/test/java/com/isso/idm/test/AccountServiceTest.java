@@ -3,6 +3,7 @@ package com.isso.idm.test;
 import static org.junit.Assert.*;
 
 import java.util.Date;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -14,9 +15,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.isso.idm.IAccountService;
 import com.isso.idm.IdmServiceException;
-import com.isso.idm.constant.IdmServiceConstant;
 import com.isso.idm.dto.AccountDTO;
-import com.isso.idm.repository.IAccoutRepository;
+import com.isso.idm.service.LDAPConnectionService;
+
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:test-config.xml")
@@ -26,33 +27,17 @@ public class AccountServiceTest {
 	private IAccountService accountService;
 	
 	@Autowired
-	private IAccoutRepository accoutRepository;
+	private LDAPConnectionService ldapConnectionService;
 	
 	private AccountDTO accountDto = null; 
 	@Before
 	public void setup() {
-		accountDto = new AccountDTO();
-		accountDto.setAccountCode("630113");
-		accountDto.setAccountName("rong.dai");
-		accountDto.setUserId((long)2);
-		accountDto.setAccountStatus(IdmServiceConstant.ACCOUNT_INACTIVE);
-		accountDto.setLockStatus(IdmServiceConstant.ACCOUNT_UNLOCK);
-		accountDto.setCreateDate(new Date());
 	}
 	
 	@Test
-	public void testCreateAccount() throws IdmServiceException {
-		Long accountId = accountService.createAccount(accountDto);
-		AccountDTO accountDTO = accountService.findByAccountId(accountId);
-		assertEquals(accountDto.getAccountCode(),accountDTO.getAccountCode());
-		accountDTO.setAccountStatus(IdmServiceConstant.ACCOUNT_ACTIVE);
-		accountService.updateAccount(accountDTO);
-		accountDTO = accountService.findByAccountCode(accountDto.getAccountCode());
-		assertEquals(Integer.valueOf(IdmServiceConstant.ACCOUNT_ACTIVE),accountDTO.getAccountStatus());
-		accountService.deleteAccount(accountDTO);
-		accountDTO = accountService.findByAccountId(accountId);
-		assertEquals(Integer.valueOf(IdmServiceConstant.ACCOUNT_INACTIVE),accountDTO.getAccountStatus());
-	}
+	public void testAccount() throws IdmServiceException {
+		accountService.retrievePassword("152730", "tongwang.zh@hotmail.com");
+		}
 	@After
 	public void destroy() {
 	}

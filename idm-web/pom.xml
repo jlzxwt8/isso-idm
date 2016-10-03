@@ -46,7 +46,7 @@
 					<warName>idm</warName>
 					<webResources>
 						<resource>
-							<directory>src/main/resources-${package.environment}</directory>
+							<directory>src/main/resources</directory>
 							<targetPath>WEB-INF/classes</targetPath>
 							<filtering>true</filtering>
 						</resource>
@@ -58,12 +58,30 @@
 		</plugins>
 	</build>
 	<dependencies>
+	<dependency>
+			<groupId>com.isso.idm</groupId>
+			<artifactId>idm-client</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>com.isso.idm</groupId>
 			<artifactId>idm-service</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	
+		<dependency>
+			<groupId>org.apache.oltu.oauth2</groupId>
+			<artifactId>org.apache.oltu.oauth2.client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.oltu.oauth2</groupId>
+			<artifactId>org.apache.oltu.oauth2.authzserver</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.oltu.oauth2</groupId>
+			<artifactId>org.apache.oltu.oauth2.resourceserver</artifactId>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
@@ -120,6 +138,10 @@
 			</exclusions>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>
 				org.glassfish.jersey.test-framework.providers
 			</groupId>
@@ -138,6 +160,11 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>

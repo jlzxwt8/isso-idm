@@ -1,0 +1,7 @@
+
+#
+# 验证服务配置
+#
+com.sgm.dms.am.authorize.domainname = .saic-gm.com
+com.sgm.dms.am.authorize.path = /
+com.sgm.dms.am.nginx.wasDeploy = false

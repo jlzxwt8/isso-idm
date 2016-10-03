@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>ISSO 认证服务管理平台</title>
+<meta charset="UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" type="text/css"
+	href="../../vendor/jquery-easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css"
+	href="../../vendor/jquery-easyui/themes/icon.css">
+<link rel="stylesheet" type="text/css"
+	href="../../vendor/jquery-easyui/themes/color.css">
+<link rel="stylesheet" href="../../common/styles/framework.css">
+</head>
+<body class="sgm_sys_page_w" ng-app="amAdminApp">
+	<div class="page">
+		<header>
+			<div id="header">
+				<div class="sgmdp_title">认证服务管理平台</div>
+			</div>
+		</header>
+		<!--Section-->
+		<section>
+			<!--Topbar-->
+			<div class="topbar">
+				<div class="logout">
+					<a href="../../oauth/logout">登出系统</a>
+				</div>
+				<div class="welcome">
+					<a href="#" ng-bind="user.name"></a>
+				</div>
+			</div>
+			<!--Content-->
+			<div class="content_w">
+				<div class="sidebox">
+					<div left-menu></div>
+				</div>
+				<div class="mainbox">
+					<div class="crumbs">
+						<a href="index.html">首页</a> <a href="#"
+							ng-repeat="pagePath in appStatus.activePagePath"
+							ng-class="{current:$last}" ng-bind="pagePath"></a>
+					</div>
+					<div ui-view></div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Footer -->
+	</div>
+
+	<script type="text/javascript" src="../../vendor/jquery/jquery.min.js"></script>
+	<script type="text/javascript"
+		src="../../vendor/jquery-easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript"
+		src="../../vendor/jquery-easyui/easyloader.js"></script>
+	<script type="text/javascript"
+		src="../../vendor/jquery-easyui/locale/easyui-lang-zh_CN.js"></script>
+	<!-- AngularJS -->
+	<script type="text/javascript" src="../../vendor/angularjs/angular.js"></script>
+	<script type="text/javascript"
+		src="../../vendor/angularjs/angular-touch.min.js"></script>
+	<script type="text/javascript"
+		src="../../vendor/angularjs/angular-resource.min.js"></script>
+	<script type="text/javascript"
+		src="../../vendor/angular-ui-router/angular-ui-router.min.js"></script>
+	<!-- App JS -->
+	<script type="text/javascript" src="../scripts/app.js"></script>
+	<script type="text/javascript"
+		src="../../common/scripts/framework.js"></script>
+	<script type="text/javascript"
+		src="../../common/scripts/angularjs-esayui.js"></script>
+	<script type="text/javascript" src="../scripts/controllers.js"></script>
+	<script type="text/javascript" src="../scripts/services.js"></script>
+</body>
+</html>

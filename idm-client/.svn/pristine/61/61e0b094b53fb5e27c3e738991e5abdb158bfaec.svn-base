@@ -1,0 +1,27 @@
+/****************************************************************************************
+ * @File name   :      OAuthClientErrorConstant.java
+ *
+ * @Author      :      LEIKZHU
+ *
+ * @Date        :      Aug 28, 2014
+ *
+ * @Copyright Notice: 
+ * Copyright (c) 2014 SGM, Inc. All  Rights Reserved.
+ * This software is published under the terms of the SGM Software
+ * License version 1.0, a copy of which has been included with this
+ * distribution in the LICENSE.txt file.
+ * 
+ * 
+ * --------------------------------------------------------------------------------------
+ * Date								Who					Version				Comments
+ * Aug 28, 2014 2:12:50 PM			LEIKZHU				1.0				Initial Version
+ ****************************************************************************************/
+package com.sgm.dms.am.client.constant;
+
+public class OAuthClientConstant {
+	
+	public static final String SGM_OAUTH_RESPONSE_TYPE = "code";
+	public static final String SGM_OAUTH_CODE = "SGM_OAUTH_CODE";
+	public static final String SGM_SSO_AUTHENTICATION = "SGM_SSO_AUTHENTICATION";
+
+}

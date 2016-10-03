@@ -1,5 +1,7 @@
 package com.isso.idm.restful;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
@@ -24,6 +26,8 @@ import com.isso.idm.base.restful.BaseRestful;
 import com.isso.idm.constant.IdmServiceErrorConstant;
 import com.isso.idm.dto.AccountDTO;
 import com.isso.idm.dto.AccountPageDTO;
+import com.isso.idm.dto.CurrentLoginUserDTO;
+
 
 @Path("/accounts")
 public class AccountServiceRestful extends BaseRestful {
@@ -92,6 +96,8 @@ public class AccountServiceRestful extends BaseRestful {
 			userId = getLoginUser(request);
 			accountDTO.setCreateBy(userId);
 			accountDTO.setModifyBy(userId);
+			accountDTO.setCreateDate(new Date());
+			accountDTO.setModifyDate(new Date());
 			accountId = accountService.createAccount(accountDTO);
 		} catch (IdmServiceException e) {
 			throw new InternalServerErrorException(e.getErrorKey() + ": "
@@ -122,6 +128,7 @@ public class AccountServiceRestful extends BaseRestful {
 		try {
 			userId = getLoginUser(request);
 			accountDTO.setModifyBy(userId);
+			accountDTO.setModifyDate(new Date());
 			accountService.updateAccount(accountDTO);
 		} catch (IdmServiceException e) {
 			throw new InternalServerErrorException(e.getErrorKey() + ": "
@@ -149,6 +156,7 @@ public class AccountServiceRestful extends BaseRestful {
 			account = new AccountDTO();
 			account.setAccountId(accountId);
 			account.setModifyBy(userId);
+			account.setModifyDate(new Date());
 			accountService.deleteAccount(account);
 		} catch (IdmServiceException e) {
 			if (e.getErrorKey().equals(IdmServiceErrorConstant.DATA_NOT_FOUND)) {
@@ -162,5 +170,35 @@ public class AccountServiceRestful extends BaseRestful {
 		} finally {
 			account = null;
 		}
+	}
+	
+	@GET
+	@Path("/currentLoginUser")
+	@Produces(MediaType.APPLICATION_JSON+ ";charset=utf-8")
+	public CurrentLoginUserDTO findCurrentAccount(@Context HttpServletRequest request) {
+		String userId = null;
+		CurrentLoginUserDTO currentLoginUserDTO = null;
+		AccountDTO accountDto = null;
+		String[] permission = null;
+ 		try {
+ 			userId = getLoginUser(request);
+			if(userId == null)
+				throw new IdmServiceException(IdmServiceErrorConstant.DATA_NOT_FOUND,"no login user found");
+ 			accountDto = accountService.findByAccountCode(userId);
+			currentLoginUserDTO = new CurrentLoginUserDTO();
+			currentLoginUserDTO.setUserId(accountDto.getAccountCode());
+			currentLoginUserDTO.setUserName(accountDto.getAccountName());
+			permission = new String[]{"amAdmin"};
+			currentLoginUserDTO.setPermission(permission);
+		} catch (IdmServiceException e) {
+			if (e.getErrorKey().equals(IdmServiceErrorConstant.DATA_NOT_FOUND)) {
+				throw new NotFoundException(e.getMessage());
+			} else {
+				throw new InternalServerErrorException(e.getMessage());
+			}
+		} catch (Exception e) {
+			throw new InternalServerErrorException(e.getMessage());
+		}
+		return currentLoginUserDTO;
 	}
 }

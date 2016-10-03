@@ -33,6 +33,8 @@
 		<oltu.oauth2.version>1.0.0</oltu.oauth2.version>
 		<cxf.version>2.7.10</cxf.version>
 		<kaptcha.version>0.0.9</kaptcha.version>
+		<memcached.version>2.0.1</memcached.version>
+		<common.version>1.0.0</common.version>
 
 		<junit.version>4.11</junit.version>
 	</properties>
@@ -97,6 +99,11 @@
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-web</artifactId>
 				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-webmvc</artifactId>
+			<version>${spring.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.glassfish.hk2</groupId>
@@ -176,12 +183,13 @@
 				<artifactId>jldap</artifactId>
 				<version>${jldap.version}</version>
 			</dependency>
+			
 			<dependency>
-				<groupId>com.novell.ldap</groupId>
-				<artifactId>utilities</artifactId>
-				<version>${jldap.version}</version>
+   		 		<groupId>com.googlecode.xmemcached</groupId>
+    			<artifactId>xmemcached</artifactId>
+    			<version>${memcached.version}</version>
 			</dependency>
-
+			
 			<dependency>
 				<groupId>mysql</groupId>
 				<artifactId>mysql-connector-java</artifactId>
@@ -300,6 +308,11 @@
 				<version>${javax.servlet-api.version}</version>
 				<scope>provided</scope>
 			</dependency>
+			<dependency>
+				<groupId>com.isso.common</groupId>
+				<artifactId>common-service</artifactId>
+				<version>${common.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<modules>
@@ -307,6 +320,7 @@
 		<module>../idm-api</module>
 		<module>../idm-service</module>
 		<module>../idm-web</module>
+		<module>../idm-client</module>
 	</modules>
 
 	<distributionManagement>

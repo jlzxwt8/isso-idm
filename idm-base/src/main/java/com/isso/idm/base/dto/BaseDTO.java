@@ -1,5 +1,6 @@
 package com.isso.idm.base.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class BaseDTO implements java.io.Serializable {
 
@@ -16,12 +17,12 @@ public class BaseDTO implements java.io.Serializable {
 	/**
 	 * 建立日期 db_column: CREATE_DATE
 	 */
-
+	@JsonFormat(pattern=DATE_TIME_FORMAT)
 	private java.util.Date createDate;
 	/**
 	 * 修改日期 db_column: MODIFY_DATE
 	 */
-
+	@JsonFormat(pattern=DATE_TIME_FORMAT)
 	private java.util.Date modifyDate;
 	/**
 	 * 建立人 db_column: CREATE_BY

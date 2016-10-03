@@ -1,0 +1,18 @@
+<ul>
+	<li ng-repeat="menu in menuDatas" ng-class="{open:menu.active}">
+		<a href="#" ng-click="submenusClick($event)" ng-if="menu.submenus.length>0" 
+			ng-class="{category_menu:menu.submenus.length>0}">{{menu.name}}</a>
+		<a href="#" ng-if="menu.submenus.length==0" ng-class="{current:menu.active}" 
+			ui-sref="{{menu.id}}">{{menu.name}}</a>
+		<ul ng-if="(menu.submenus.length>0 && menu.active)" style="display: block;">
+			<li ng-repeat="submenu in menu.submenus">
+				<a href="#" ng-class="{current:submenu.active}" ui-sref="{{menu.id+'_'+submenu.id}}">{{submenu.name}}</a>
+			</li>
+		</ul>
+		<ul ng-if="!menu.active">
+			<li ng-repeat="submenu in menu.submenus">
+				<a href="#" ng-class="{current:submenu.active}" ui-sref="{{menu.id+'_'+submenu.id}}">{{submenu.name}}</a>
+			</li>
+		</ul>
+	</li>
+</ul>
