@@ -1,9 +1,5 @@
 @charset "utf-8";
-/*
-Name:SGMSTYLE
-Theme URI: SGM-DP
-Author:Lily
-*/
+
 /*Global csses*/
 body{margin:0 auto; font-size:12px; font-family:"微软雅黑"; color:464242; min-width:1000px; overflow:auto;}
 h1,h2,h3,h4,h5,h6,input,select,textarea,ol,dl,ul,li,dt,dd,form,fieldset{margin:0; padding:0;}

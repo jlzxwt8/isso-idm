@@ -1,6 +1,7 @@
 package com.isso.idm.restful;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.BadRequestException;
@@ -82,6 +83,25 @@ public class AccountServiceRestful extends BaseRestful {
 							+ e.getMessage());
 		}
 		return accountPageDTO;
+	}
+	
+	@GET
+	@Path("/all")
+	@Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public List<AccountDTO> findAccounts() {
+		List<AccountDTO> accountDTOList = null;
+		try {
+			accountDTOList = accountService.findAccounts();
+		} catch (IdmServiceException e) {
+			throw new InternalServerErrorException(e.getErrorKey() + ": "
+					+ e.getMessage());
+		} catch (Exception e) {
+			throw new InternalServerErrorException(
+					IdmServiceErrorConstant.INTERNAL_ERROR + ": "
+							+ e.getMessage());
+		}
+		return accountDTOList;
 	}
 
 	@POST

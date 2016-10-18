@@ -48,6 +48,7 @@ public class AuthorizeServiceImpl implements IAuthorizeService {
 	@Autowired
 	private ICacheService cacheService;
 
+	
 	@Override
 	public boolean checkApplicationSystemCode(String systemCode) {
 		boolean check = false;

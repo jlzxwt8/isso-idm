@@ -29,7 +29,7 @@
 		</init-param>
 		<init-param>
 			<param-name>excludePath</param-name>
-			<param-value>/oauth,/account_service,/system_service</param-value>
+			<param-value>/oauth</param-value>
 		</init-param>
 		<init-param>
 			<param-name>excludeFile</param-name>
@@ -40,6 +40,7 @@
 	<filter-mapping>
 		<filter-name>OAuthClientFilter</filter-name>
 		<url-pattern>/system/*</url-pattern>
+		<url-pattern>/account/*</url-pattern>
 		<url-pattern>/account_service/*</url-pattern>
 		<url-pattern>/system_service/*</url-pattern>
 	</filter-mapping>

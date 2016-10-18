@@ -1,6 +1,8 @@
 
 package com.isso.idm;
 
+import java.util.List;
+
 import com.isso.idm.dto.AccountDTO;
 import com.isso.idm.dto.AccountPageDTO;
 
@@ -113,6 +115,14 @@ public interface IAccountService {
 	 */
 	public AccountPageDTO findAccounts(int pageIndex, int pageSize) throws IdmServiceException;
 
+	/**
+	 * 查询所有用户账号
+	 * @Author : Wang Tong
+	 * @return 账号列表
+	 * @throws IdmServiceException
+	 */
+	public List<AccountDTO> findAccounts() throws IdmServiceException;
+	
 	/**
 	 * 根据用户账号查找用户
 	 * @Author : Wang Tong

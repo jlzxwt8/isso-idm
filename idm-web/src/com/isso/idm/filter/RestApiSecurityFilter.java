@@ -11,6 +11,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import com.isso.idm.base.constant.BaseConstant;
 import com.isso.idm.client.dto.SSOCertificateDTO;
 import com.isso.idm.constant.IdmServiceConstant;
 import com.isso.idm.constant.OAuthConstant;
@@ -45,7 +46,7 @@ public class RestApiSecurityFilter implements Filter {
 		if (authentication != null) {
 			userId = authentication.getUserId();
 		}
-		request.setAttribute(IdmServiceConstant.CURRENT_LOGIN_UESRID, userId);
+		request.setAttribute(BaseConstant.LOGIN_USER, userId);
 		filterChain.doFilter(servletRequest, servletResponse);
 	}
 

@@ -62,7 +62,6 @@ public class AccountServiceImpl implements IAccountService {
 	@Autowired
 	private AccountMailService accountMailService;
 	
-	
 	/* (non-Javadoc)
 	 * @see com.isso.idm.IAccountService#createAccount(com.isso.idm.dto.AccountDTO)
 	 */
@@ -475,4 +474,24 @@ public class AccountServiceImpl implements IAccountService {
         }
         return new String(chs);
     }
+
+	@Override
+	public List<AccountDTO> findAccounts() throws IdmServiceException {
+		List<Account> accountList = null;
+		List<AccountDTO> accountDTOList = new ArrayList<AccountDTO>();
+		AccountDTO accountDTO = null;
+		try {
+			accountList = (List<Account>) accountRepository.findAll();
+			for(int i = 0; i < accountList.size(); i++){
+				accountDTO = toDto(accountList.get(i));
+				accountDTOList.add(accountDTO);
+				accountDTO = null;
+			}
+		} catch (Exception e) {
+			throw new IdmServiceException(IdmServiceErrorConstant.DATA_PROCESS, "用户查询失败", e);
+		} finally {
+			accountList = null;
+		}
+		return accountDTOList;
+	}
 }

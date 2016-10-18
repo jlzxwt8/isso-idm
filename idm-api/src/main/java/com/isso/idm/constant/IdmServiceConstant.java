@@ -20,7 +20,5 @@ public class IdmServiceConstant {
 	public static final String MB_KEY_LOGIN_LOCK = "MB_KEY_LOGIN_LOCK";
 	public static final String MB_KEY_LOGIN_EXPIRE = "MB_KEY_LOGIN_EXPIRE";
 	public static final String MB_KEY_PASSWORD_EXPIRE = "MB_KEY_PASSWORD_EXPIRE";
-	
-	public static final String CURRENT_LOGIN_UESRID = "CURRENT_LOGIN_UESRID";
 
 }

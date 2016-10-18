@@ -29,7 +29,7 @@ public class AccountDTO extends BaseDTO implements Serializable {
 	public Long getAccountId() {
 		return accountId;
 	}
-
+	
 	/**
 	 * @param accountId the accountId to set
 	 */
